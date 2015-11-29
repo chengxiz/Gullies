@@ -1,5 +1,4 @@
 tool_exec <- function(in_params, out_params){
-	# workspace<-in_params[[1]]
 	points<-in_params[[1]]
 	Point_X<-in_params[[2]]
 	Point_Y<-in_params[[3]]
@@ -32,8 +31,6 @@ tool_exec <- function(in_params, out_params){
 	ngully<-length(rlist[[1]])
 	print(ngully)
 	print(rlist)
-	# filename<-paste(workspace,'Gullies.txt',sep='\')
-	# cat("Hello",file="outfile.txt",sep="\n")
 	for (i in 1:ngully){
 		n1=as.numeric(rlist[[1]][i])
 		print(i)
@@ -47,7 +44,7 @@ tool_exec <- function(in_params, out_params){
 			}
 		# print(n1)
 		# print(lastn)
-		#All points belong to the same gully
+		# MAKING SURE All points belong to the same gully
 		subPoints<-t(data.frame(ls[n1:lastn]))
 		colnames(subPoints) <- c("Distance","Differ_Ele","Slope","GID")
 		rownames(subPoints) <- c(n1:lastn)
@@ -57,15 +54,9 @@ tool_exec <- function(in_params, out_params){
 		#Make sure the trendency is from shell to river, the differences of elevation keep positive but decrease
 		###NROW() is for vectors
 		npst<-NROW(subPoints[subPoints[,3]>=0,])
-		nnga<-NROW(subPoints[subPoints[,3]<0,])
-		# print(subPoints[subPoints[,3]<0,])
-		# print(typeof(subPoints[subPoints[,3]>=0,]))
-		# print(subPoints[subPoints[,3]>=0,])
-		# print(typeof(data.frame(subPoints[subPoints[,3]<0,])))		
-		# print(subPoints[subPoints[,3]<0,])
-		# print(nrow(t(subPoints[subPoints[,3]<0,])))
-		print(npst)
-		print(nnga)
+		nnga<-NROW(subPoints[subPoints[,3]<0,])		
+		# print(npst)
+		# print(nnga)
 		if (npst<nnga){
 			#from like c(-1,-2,-3) to c(3,2,1) 
 			subPoints[,2]<-(-rev(subPoints[,2]))
@@ -75,17 +66,13 @@ tool_exec <- function(in_params, out_params){
 		}
 		
 		AvgSlope=mean(subPoints[,3])
-		print(subPoints[,3])
-		# print(log(subPoints[,3]))
-		# print(log(subPoints[,1]))
+		print(subPoints[,3])	
 		fit <- lm(log(subPoints[,3]) ~ log(subPoints[,1]))
 		concavity<-fit$coefficients[[2]]
 		as<-c(as,AvgSlope)
 		cc<-c(cc,concavity)
-		# print(subPoints)
 		print(AvgSlope)
 		print(concavity)
-		# print i
 	}
 	print(as)
 	print(cc)
